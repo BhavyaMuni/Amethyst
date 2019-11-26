@@ -56,47 +56,86 @@ class _GenrePageState extends State<GenrePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(selectedGenres.join(", ")),
-          Wrap(
-              children: List<Widget>.generate(genre_list.length, (int index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ChoiceChip(
-                labelPadding:
-                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-                labelStyle: TextStyles()
-                    .regularTextStyle()
-                    .copyWith(fontSize: 18, color: Colors.white),
-                backgroundColor: Color(0x006597ef),
-                selectedColor: Color(0xff6597ef),
-                label: Text(genre_list[index]),
-                selected: selectedGenres.contains(genre_list[index]),
-                onSelected: (bool selected) {
-                  setState(() {
-                    if (!selectedGenres.contains(genre_list[index]) &&
-                        selectedGenres.length < 3) {
-                      selectedGenres.add(genre_list[index]);
-                    } else {
-                      selectedGenres.remove(genre_list[index]);
-                    }
-                  });
-                },
-              ),
-            );
-          }).toList()),
-          FloatingActionButton(
-            onPressed: () {
-              saveGenre(selectedGenres);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => InstrumentPage(
-                            genreCtx: context,
-                          )));
-            },
-          )
+          Text(
+            "Select upto 3",
+            style: TextStyles()
+                .headerTextStyle()
+                .copyWith(fontWeight: FontWeight.w400, fontSize: 24),
+          ),
+          Text(
+            "GENRES",
+            style: TextStyles().headerTextStyle().copyWith(fontSize: 24),
+          ),
+          Container(
+            height: 30,
+          ),
+          Text(selectedGenres.join(", "),
+              style: TextStyles()
+                  .regularTextStyle()
+                  .copyWith(color: Colors.white, fontSize: 18)),
+          Container(
+            height: 30,
+          ),
+          Center(
+            child: Wrap(
+                spacing: 15,
+                children: List<Widget>.generate(genre_list.length, (int index) {
+                  return ChoiceChip(
+                    labelPadding:
+                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                    labelStyle: TextStyles()
+                        .regularTextStyle()
+                        .copyWith(fontSize: 14, color: Colors.white),
+                    backgroundColor: Color(0x00121212),
+                    selectedColor: Color(0x00000000),
+                    label: Container(
+                        height: 30,
+                        decoration: BoxDecoration(
+                            gradient: selectedGenres.contains(genre_list[index])
+                                ? TextStyles().baseGrad()
+                                : null,
+                            borderRadius: BorderRadius.circular(15.0)),
+                        width: 150,
+                        child: Center(
+                          child: Text(
+                            genre_list[index],
+                            textAlign: TextAlign.center,
+                          ),
+                        )),
+                    selected: selectedGenres.contains(genre_list[index]),
+                    onSelected: (bool selected) {
+                      setState(() {
+                        if (!selectedGenres.contains(genre_list[index]) &&
+                            selectedGenres.length < 3) {
+                          selectedGenres.add(genre_list[index]);
+                        } else {
+                          selectedGenres.remove(genre_list[index]);
+                        }
+                      });
+                    },
+                  );
+                }).toList()),
+          ),
         ],
       ),
+      floatingActionButton: FlatButton(
+        shape: CircleBorder(),
+        child: Icon(
+          Icons.navigate_next,
+          color: Color(0xffb339f6),
+          size: 40,
+        ),
+        onPressed: () {
+          saveGenre(selectedGenres);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => InstrumentPage(
+                        genreCtx: context,
+                      )));
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -142,6 +181,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
     'Samples',
   ];
 
+  List<String> selectedIntrus = List();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,34 +189,89 @@ class _InstrumentPageState extends State<InstrumentPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(instrument_list[_value]),
-          Wrap(
-              children:
-                  List<Widget>.generate(instrument_list.length, (int index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ChoiceChip(
-                label: Text(instrument_list[index]),
-                selected: _value == index,
-                onSelected: (bool selected) {
-                  setState(() {
-                    _value = selected ? index : null;
-                  });
-                },
-              ),
-            );
-          }).toList()),
-          FloatingActionButton(
-            onPressed: () {
-              savenstrument(instrument_list[_value]);
-              Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-                return SignUpFinalPage(
-                    genreCtx: widget.genreCtx, instruCtx: context);
-              }));
-            },
-          )
+          Text(
+            "Select upto 3",
+            style: TextStyles()
+                .headerTextStyle()
+                .copyWith(fontWeight: FontWeight.w400, fontSize: 24),
+          ),
+          Text(
+            "INSTRUMENTS",
+            style: TextStyles().headerTextStyle().copyWith(fontSize: 24),
+          ),
+          Container(
+            height: 30,
+          ),
+          Text(selectedIntrus.join(", "),
+              style: TextStyles()
+                  .regularTextStyle()
+                  .copyWith(color: Colors.white, fontSize: 18)),
+          Container(
+            height: 30,
+          ),
+          Center(
+            child: Wrap(
+                spacing: 15,
+                children:
+                    List<Widget>.generate(instrument_list.length, (int index) {
+                  return ChoiceChip(
+                    labelPadding:
+                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                    labelStyle: TextStyles()
+                        .regularTextStyle()
+                        .copyWith(fontSize: 14, color: Colors.white),
+                    backgroundColor: Color(0x00121212),
+                    selectedColor: Color(0x00000000),
+                    label: Container(
+                        height: 30,
+                        decoration: BoxDecoration(
+                            gradient:
+                                selectedIntrus.contains(instrument_list[index])
+                                    ? TextStyles().baseGrad()
+                                    : null,
+                            borderRadius: BorderRadius.circular(15.0)),
+                        width: 150,
+                        child: Center(
+                          child: Text(
+                            instrument_list[index],
+                            textAlign: TextAlign.center,
+                          ),
+                        )),
+                    selected: selectedIntrus.contains(instrument_list[index]),
+                    onSelected: (bool selected) {
+                      setState(() {
+                        if (!selectedIntrus.contains(instrument_list[index]) &&
+                            selectedIntrus.length < 3) {
+                          selectedIntrus.add(instrument_list[index]);
+                        } else {
+                          selectedIntrus.remove(instrument_list[index]);
+                        }
+                      });
+                    },
+                  );
+                }).toList()),
+          ),
         ],
       ),
+      floatingActionButton: FlatButton(
+        shape: CircleBorder(),
+        child: Icon(
+          Icons.navigate_next,
+          color: Color(0xffb339f6),
+          size: 40,
+        ),
+        onPressed: () {
+          savenstrument(selectedIntrus.join(", "));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SignUpFinalPage(
+                        genreCtx: context,
+                        instruCtx: context,
+                      )));
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
