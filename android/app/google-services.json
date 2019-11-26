@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "166648588926",
+    "firebase_url": "https://amethyst-d24a3.firebaseio.com",
+    "project_id": "amethyst-d24a3",
+    "storage_bucket": "amethyst-d24a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166648588926:android:9cc7ca9dcf55889df2862f",
+        "android_client_info": {
+          "package_name": "com.amethyst.amethyst_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "166648588926-n45dvgdtu800aunnfli7cm32i6uecf8n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.amethyst.amethyst_app",
+            "certificate_hash": "f5be6769bdd9f1aaeb9f97e4560fee9e5f49b065"
+          }
+        },
+        {
+          "client_id": "166648588926-17qe9rrp1aj67014hckffcqhntmao78t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuYQCAER-dmYzQyg3a2uVlme2ggbM9pys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "166648588926-17qe9rrp1aj67014hckffcqhntmao78t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
