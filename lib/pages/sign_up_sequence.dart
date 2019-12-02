@@ -1,4 +1,5 @@
 import 'package:amethyst_app/pages/login_page.dart';
+import 'package:amethyst_app/pages/sign_up.dart';
 import 'package:amethyst_app/services/auth.dart';
 import 'package:amethyst_app/styles.dart';
 import 'package:flutter/material.dart';
@@ -52,87 +53,93 @@ class _GenrePageState extends State<GenrePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Select upto 3",
-            style: TextStyles()
-                .headerTextStyle()
-                .copyWith(fontWeight: FontWeight.w400, fontSize: 24),
-          ),
-          Text(
-            "GENRES",
-            style: TextStyles().headerTextStyle().copyWith(fontSize: 24),
-          ),
-          Container(
-            height: 30,
-          ),
-          Text(selectedGenres.join(", "),
-              style: TextStyles()
-                  .regularTextStyle()
-                  .copyWith(color: Colors.white, fontSize: 18)),
-          Container(
-            height: 30,
-          ),
-          Center(
-            child: Wrap(
-                spacing: 15,
-                children: List<Widget>.generate(genre_list.length, (int index) {
-                  return ChoiceChip(
-                    labelPadding:
-                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                    labelStyle: TextStyles()
-                        .regularTextStyle()
-                        .copyWith(fontSize: 14, color: Colors.white),
-                    backgroundColor: Color(0x00121212),
-                    selectedColor: Color(0x00000000),
-                    label: Container(
-                        height: 30,
-                        decoration: BoxDecoration(
-                            gradient: selectedGenres.contains(genre_list[index])
-                                ? TextStyles().baseGrad()
-                                : null,
-                            borderRadius: BorderRadius.circular(15.0)),
-                        width: 150,
-                        child: Center(
-                          child: Text(
-                            genre_list[index],
-                            textAlign: TextAlign.center,
-                          ),
-                        )),
-                    selected: selectedGenres.contains(genre_list[index]),
-                    onSelected: (bool selected) {
-                      setState(() {
-                        if (!selectedGenres.contains(genre_list[index]) &&
-                            selectedGenres.length < 3) {
-                          selectedGenres.add(genre_list[index]);
-                        } else {
-                          selectedGenres.remove(genre_list[index]);
-                        }
-                      });
-                    },
-                  );
-                }).toList()),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 60.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "Select upto 3",
+                    style: TextStyles()
+                        .headerTextStyle()
+                        .copyWith(fontWeight: FontWeight.w400, fontSize: 24),
+                  ),
+                  Text(
+                    "GENRES",
+                    style:
+                        TextStyles().headerTextStyle().copyWith(fontSize: 24),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              child: Text(selectedGenres.join(", "),
+                  style: TextStyles()
+                      .regularTextStyle()
+                      .copyWith(color: Colors.white, fontSize: 18)),
+            ),
+            Container(
+              child: Center(
+                child: Wrap(
+                    spacing: 15,
+                    children:
+                        List<Widget>.generate(genre_list.length, (int index) {
+                      return ChoiceChip(
+                        labelPadding: EdgeInsets.symmetric(
+                            horizontal: 0.0, vertical: 0.0),
+                        labelStyle: TextStyles()
+                            .regularTextStyle()
+                            .copyWith(fontSize: 14, color: Colors.white),
+                        backgroundColor: Color(0x00121212),
+                        selectedColor: Color(0x00000000),
+                        label: Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                gradient:
+                                    selectedGenres.contains(genre_list[index])
+                                        ? TextStyles().baseGrad()
+                                        : null,
+                                borderRadius: BorderRadius.circular(15.0)),
+                            width: 150,
+                            child: Center(
+                              child: Text(
+                                genre_list[index],
+                                textAlign: TextAlign.center,
+                              ),
+                            )),
+                        selected: selectedGenres.contains(genre_list[index]),
+                        onSelected: (bool selected) {
+                          setState(() {
+                            if (!selectedGenres.contains(genre_list[index]) &&
+                                selectedGenres.length < 3) {
+                              selectedGenres.add(genre_list[index]);
+                            } else {
+                              selectedGenres.remove(genre_list[index]);
+                            }
+                          });
+                        },
+                      );
+                    }).toList()),
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FlatButton(
         shape: CircleBorder(),
         child: Icon(
           Icons.navigate_next,
-          color: Color(0xffb339f6),
+          color: Color(0xffffffff),
           size: 40,
         ),
         onPressed: () {
           saveGenre(selectedGenres);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => InstrumentPage(
-                        genreCtx: context,
-                      )));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => InstrumentPage()));
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -146,9 +153,7 @@ class _GenrePageState extends State<GenrePage> {
 }
 
 class InstrumentPage extends StatefulWidget {
-  InstrumentPage({Key key, this.genreCtx}) : super(key: key);
-
-  final BuildContext genreCtx;
+  InstrumentPage({Key key}) : super(key: key);
 
   @override
   _InstrumentPageState createState() => _InstrumentPageState();
@@ -185,90 +190,92 @@ class _InstrumentPageState extends State<InstrumentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Select upto 3",
-            style: TextStyles()
-                .headerTextStyle()
-                .copyWith(fontWeight: FontWeight.w400, fontSize: 24),
-          ),
-          Text(
-            "INSTRUMENTS",
-            style: TextStyles().headerTextStyle().copyWith(fontSize: 24),
-          ),
-          Container(
-            height: 30,
-          ),
-          Text(selectedIntrus.join(", "),
-              style: TextStyles()
-                  .regularTextStyle()
-                  .copyWith(color: Colors.white, fontSize: 18)),
-          Container(
-            height: 30,
-          ),
-          Center(
-            child: Wrap(
-                spacing: 15,
-                children:
-                    List<Widget>.generate(instrument_list.length, (int index) {
-                  return ChoiceChip(
-                    labelPadding:
-                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                    labelStyle: TextStyles()
-                        .regularTextStyle()
-                        .copyWith(fontSize: 14, color: Colors.white),
-                    backgroundColor: Color(0x00121212),
-                    selectedColor: Color(0x00000000),
-                    label: Container(
-                        height: 30,
-                        decoration: BoxDecoration(
-                            gradient:
-                                selectedIntrus.contains(instrument_list[index])
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 60.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Text(
+                  "Select upto 3",
+                  style: TextStyles()
+                      .headerTextStyle()
+                      .copyWith(fontWeight: FontWeight.w400, fontSize: 24),
+                ),
+                Text(
+                  "INSTRUMENTS",
+                  style: TextStyles().headerTextStyle().copyWith(fontSize: 24),
+                ),
+              ],
+            ),
+            Container(
+              child: Text(selectedIntrus.join(", "),
+                  style: TextStyles()
+                      .regularTextStyle()
+                      .copyWith(color: Colors.white, fontSize: 18)),
+            ),
+            Container(
+              child: Center(
+                child: Wrap(
+                    spacing: 15,
+                    children: List<Widget>.generate(instrument_list.length,
+                        (int index) {
+                      return ChoiceChip(
+                        labelPadding: EdgeInsets.symmetric(
+                            horizontal: 0.0, vertical: 0.0),
+                        labelStyle: TextStyles()
+                            .regularTextStyle()
+                            .copyWith(fontSize: 14, color: Colors.white),
+                        backgroundColor: Color(0x00121212),
+                        selectedColor: Color(0x00000000),
+                        label: Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                gradient: selectedIntrus
+                                        .contains(instrument_list[index])
                                     ? TextStyles().baseGrad()
                                     : null,
-                            borderRadius: BorderRadius.circular(15.0)),
-                        width: 150,
-                        child: Center(
-                          child: Text(
-                            instrument_list[index],
-                            textAlign: TextAlign.center,
-                          ),
-                        )),
-                    selected: selectedIntrus.contains(instrument_list[index]),
-                    onSelected: (bool selected) {
-                      setState(() {
-                        if (!selectedIntrus.contains(instrument_list[index]) &&
-                            selectedIntrus.length < 3) {
-                          selectedIntrus.add(instrument_list[index]);
-                        } else {
-                          selectedIntrus.remove(instrument_list[index]);
-                        }
-                      });
-                    },
-                  );
-                }).toList()),
-          ),
-        ],
+                                borderRadius: BorderRadius.circular(15.0)),
+                            width: 150,
+                            child: Center(
+                              child: Text(
+                                instrument_list[index],
+                                textAlign: TextAlign.center,
+                              ),
+                            )),
+                        selected:
+                            selectedIntrus.contains(instrument_list[index]),
+                        onSelected: (bool selected) {
+                          setState(() {
+                            if (!selectedIntrus
+                                    .contains(instrument_list[index]) &&
+                                selectedIntrus.length < 3) {
+                              selectedIntrus.add(instrument_list[index]);
+                            } else {
+                              selectedIntrus.remove(instrument_list[index]);
+                            }
+                          });
+                        },
+                      );
+                    }).toList()),
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FlatButton(
         shape: CircleBorder(),
         child: Icon(
           Icons.navigate_next,
-          color: Color(0xffb339f6),
+          color: Color(0xffffffff),
           size: 40,
         ),
         onPressed: () {
           savenstrument(selectedIntrus.join(", "));
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SignUpFinalPage(
-                        genreCtx: context,
-                        instruCtx: context,
-                      )));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SignUpFinalPage()));
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -282,10 +289,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
 }
 
 class SignUpFinalPage extends StatefulWidget {
-  SignUpFinalPage({Key key, this.genreCtx, this.instruCtx}) : super(key: key);
-
-  final BuildContext genreCtx;
-  final BuildContext instruCtx;
+  SignUpFinalPage({Key key}) : super(key: key);
 
   @override
   _SignUpFinalPageState createState() => _SignUpFinalPageState();
@@ -295,10 +299,6 @@ class _SignUpFinalPageState extends State<SignUpFinalPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return LoginForm(
-      auth: new Auth(),
-      isLogin: false,
-      ctxs: [widget.genreCtx, widget.instruCtx, context],
-    );
+    return RegisterPage();
   }
 }

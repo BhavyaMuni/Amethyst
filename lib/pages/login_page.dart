@@ -276,6 +276,8 @@ class _LoginFormState extends State<LoginForm> {
           onPressed: () async {
             try {
               await widget.auth.googleSignIn();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil("/root", (route) => false);
             } catch (e) {
               setState(() {
                 _isLoading = false;
@@ -344,11 +346,12 @@ class _LoginFormState extends State<LoginForm> {
         if (!isFormLogin) {
           userId = (await widget.auth.signUp(_email, _password, _name)).uid;
 
-          for (var ctx in widget.ctxs) {
-            Navigator.pop(ctx);
-          }
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil("/root", (route) => false);
         } else {
           userId = (await widget.auth.signIn(_email, _password)).uid;
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil("/root", (route) => false);
         }
         //widget.auth.sendEmailVerification();
         //_showVerifyEmailSentDialog();

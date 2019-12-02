@@ -2,6 +2,7 @@ import 'package:amethyst_app/pages/explore.dart';
 import 'package:amethyst_app/pages/get_started.dart';
 import 'package:amethyst_app/pages/home_page.dart';
 import 'package:amethyst_app/pages/login_page.dart';
+import 'package:amethyst_app/pages/sign_up.dart';
 import 'package:amethyst_app/pages/sign_up_sequence.dart';
 import 'package:amethyst_app/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +22,10 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Flutter Demo',
+          routes: {
+            "/root": (BuildContext context) => new RootPage(),
+            "/register": (BuildContext context) => new SignUp(),
+          },
           theme: ThemeData.dark().copyWith(
               // This is the theme of your application.
               //
