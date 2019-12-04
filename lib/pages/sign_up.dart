@@ -48,7 +48,7 @@ class _RegisterFormState extends State<RegisterForm> {
     return Form(
       key: _formKey,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(40, 00, 40, 0),
+        padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
         child: ListView(
           primary: false,
           shrinkWrap: true,
@@ -227,6 +227,49 @@ class _RegisterFormState extends State<RegisterForm> {
                 "Sign Up",
                 style: TextStyles().headerTextStyle(),
               ),
+            ),
+            Container(
+              height: 30,
+            ),
+            Center(
+                child: Text("or connect with:",
+                    style: TextStyles()
+                        .regularTextStyle()
+                        .copyWith(color: Colors.white, fontSize: 14))),
+            Container(
+              height: 10,
+            ),
+            Center(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlatButton.icon(
+                    label: Text(""),
+                    icon: Center(child: Icon(MdiIcons.google)),
+                    onPressed: () {},
+                    shape: CircleBorder(),
+                  ),
+                  FlatButton.icon(
+                    label: Text(""),
+                    icon: Center(child: Icon(MdiIcons.facebook)),
+                    onPressed: () {},
+                    shape: CircleBorder(),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 60,
+            ),
+            Center(
+              child: Text(
+                  "By continuing you are agreeing to our Terms of Service and Privacy and Cookie Policy",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400)),
             ),
           ],
         ),

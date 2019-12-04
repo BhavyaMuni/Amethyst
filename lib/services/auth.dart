@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,29 +39,7 @@ class Auth implements BaseAuth {
   }
 
   Future<String> facebookSignIn() async {
-    var fbLog = FacebookLogin();
-    String userId = "";
-    fbLog.loginBehavior = FacebookLoginBehavior.webOnly;
-
-    var cred =
-        await fbLog.logIn(['email', 'first_name', 'last_name', 'picture']);
-
-    switch (cred.status) {
-      case FacebookLoginStatus.loggedIn:
-        AuthResult res = await _firebaseAuth.signInWithCredential(
-            FacebookAuthProvider.getCredential(
-                accessToken: cred.accessToken.token));
-        userId = res.user.uid;
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        userId = "";
-        break;
-      case FacebookLoginStatus.error:
-        userId = "";
-        break;
-    }
-
-    return userId;
+    return "";
   }
 
   Future<FirebaseUser> signIn(String email, String password) async {
