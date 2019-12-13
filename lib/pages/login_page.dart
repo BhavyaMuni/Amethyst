@@ -1,12 +1,8 @@
 import 'package:amethyst_app/pages/sign_up_sequence.dart';
 import 'package:amethyst_app/services/auth.dart';
-import 'package:amethyst_app/services/database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key key, this.auth, this.isLogin, this.ctxs})
@@ -344,7 +340,7 @@ class _LoginFormState extends State<LoginForm> {
       String userId = "";
       try {
         if (!isFormLogin) {
-          userId = (await widget.auth.signUp(_email, _password, _name)).uid;
+          // userId = (await widget.auth.signUp(_email, _password, _name)).uid;
 
           Navigator.of(context)
               .pushNamedAndRemoveUntil("/root", (route) => false);

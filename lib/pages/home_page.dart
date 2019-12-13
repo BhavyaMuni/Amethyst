@@ -46,6 +46,7 @@ class _NavBarControllerState extends State<NavBarController> {
   int _selectedIndex = 0;
 
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
+    
         onTap: (int index) => setState(() => _selectedIndex = index),
         currentIndex: selectedIndex,
         items: const <BottomNavigationBarItem>[

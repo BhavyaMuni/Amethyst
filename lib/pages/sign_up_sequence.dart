@@ -1,9 +1,6 @@
-import 'package:amethyst_app/pages/login_page.dart';
 import 'package:amethyst_app/pages/sign_up.dart';
-import 'package:amethyst_app/services/auth.dart';
 import 'package:amethyst_app/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatelessWidget {
@@ -23,8 +20,7 @@ class GenrePage extends StatefulWidget {
 }
 
 class _GenrePageState extends State<GenrePage> {
-  int _value = 0;
-  List<String> genre_list = [
+  List<String> genreList = [
     'Pop',
     'Bollywood',
     'Indian classical',
@@ -87,7 +83,7 @@ class _GenrePageState extends State<GenrePage> {
                 child: Wrap(
                     spacing: 15,
                     children:
-                        List<Widget>.generate(genre_list.length, (int index) {
+                        List<Widget>.generate(genreList.length, (int index) {
                       return ChoiceChip(
                         labelPadding: EdgeInsets.symmetric(
                             horizontal: 0.0, vertical: 0.0),
@@ -100,25 +96,25 @@ class _GenrePageState extends State<GenrePage> {
                             height: 30,
                             decoration: BoxDecoration(
                                 gradient:
-                                    selectedGenres.contains(genre_list[index])
+                                    selectedGenres.contains(genreList[index])
                                         ? TextStyles().baseGrad()
                                         : null,
                                 borderRadius: BorderRadius.circular(15.0)),
                             width: 150,
                             child: Center(
                               child: Text(
-                                genre_list[index],
+                                genreList[index],
                                 textAlign: TextAlign.center,
                               ),
                             )),
-                        selected: selectedGenres.contains(genre_list[index]),
+                        selected: selectedGenres.contains(genreList[index]),
                         onSelected: (bool selected) {
                           setState(() {
-                            if (!selectedGenres.contains(genre_list[index]) &&
+                            if (!selectedGenres.contains(genreList[index]) &&
                                 selectedGenres.length < 3) {
-                              selectedGenres.add(genre_list[index]);
+                              selectedGenres.add(genreList[index]);
                             } else {
-                              selectedGenres.remove(genre_list[index]);
+                              selectedGenres.remove(genreList[index]);
                             }
                           });
                         },
@@ -160,8 +156,7 @@ class InstrumentPage extends StatefulWidget {
 }
 
 class _InstrumentPageState extends State<InstrumentPage> {
-  int _value = 0;
-  List<String> instrument_list = [
+  List<String> instrumentList = [
     'Drums',
     'Tabla',
     'Flute',
@@ -220,7 +215,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
               child: Center(
                 child: Wrap(
                     spacing: 15,
-                    children: List<Widget>.generate(instrument_list.length,
+                    children: List<Widget>.generate(instrumentList.length,
                         (int index) {
                       return ChoiceChip(
                         labelPadding: EdgeInsets.symmetric(
@@ -234,27 +229,27 @@ class _InstrumentPageState extends State<InstrumentPage> {
                             height: 30,
                             decoration: BoxDecoration(
                                 gradient: selectedIntrus
-                                        .contains(instrument_list[index])
+                                        .contains(instrumentList[index])
                                     ? TextStyles().baseGrad()
                                     : null,
                                 borderRadius: BorderRadius.circular(15.0)),
                             width: 150,
                             child: Center(
                               child: Text(
-                                instrument_list[index],
+                                instrumentList[index],
                                 textAlign: TextAlign.center,
                               ),
                             )),
                         selected:
-                            selectedIntrus.contains(instrument_list[index]),
+                            selectedIntrus.contains(instrumentList[index]),
                         onSelected: (bool selected) {
                           setState(() {
                             if (!selectedIntrus
-                                    .contains(instrument_list[index]) &&
+                                    .contains(instrumentList[index]) &&
                                 selectedIntrus.length < 3) {
-                              selectedIntrus.add(instrument_list[index]);
+                              selectedIntrus.add(instrumentList[index]);
                             } else {
-                              selectedIntrus.remove(instrument_list[index]);
+                              selectedIntrus.remove(instrumentList[index]);
                             }
                           });
                         },
@@ -298,7 +293,6 @@ class SignUpFinalPage extends StatefulWidget {
 class _SignUpFinalPageState extends State<SignUpFinalPage> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return RegisterPage();
   }
 }

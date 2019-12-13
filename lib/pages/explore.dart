@@ -1,49 +1,23 @@
+import 'package:amethyst_app/pages/chat.dart';
+import 'package:amethyst_app/styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_text/gradient_text.dart';
+import 'package:provider/provider.dart';
 
 class ExplorePage extends StatelessWidget {
   const ExplorePage({Key key}) : super(key: key);
 
-  final baseTextStyle = const TextStyle(fontFamily: 'AvenirLTStd');
-
-  LinearGradient baseGrad() {
-    return LinearGradient(
-      begin: Alignment.bottomLeft,
-      end: Alignment.topRight,
-      stops: [0.2, 0.9],
-      colors: <Color>[Color(0xffB339F6), Color(0xff32D5EB)],
-    );
-  }
-
-  TextStyle headerTextStyle() {
-    return baseTextStyle.copyWith(
-        color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w600);
-  }
-
-  TextStyle smallheaderTextStyle() {
-    return baseTextStyle.copyWith(
-        color: Color(0xffb339f6), fontSize: 12.0, fontWeight: FontWeight.w600);
-  }
-
-  TextStyle regularTextStyle() {
-    return baseTextStyle.copyWith(
-        color: Color(0xff000000), fontSize: 9.0, fontWeight: FontWeight.w400);
-  }
-
-  TextStyle subheaderTextStyle() {
-    return baseTextStyle.copyWith(
-        color: Color(0xffb339f6), fontSize: 12.0, fontWeight: FontWeight.w400);
-  }
-
   @override
   Widget build(BuildContext context) {
+    var user = Provider.of<FirebaseUser>(context);
     return Scaffold(
-      body: listCards(),
+      body: listCards("", context),
     );
   }
 
-  Widget listCards() {
+  Widget listCards(String userUid, BuildContext ctx) {
     return StreamBuilder(
       stream: Firestore.instance.collection('users').snapshots(),
       builder: (context, snapshot) {
@@ -55,10 +29,12 @@ class ExplorePage extends StatelessWidget {
         } else {
           return ListView.builder(
             itemBuilder: (context, val) {
-              return userRow(
+              return userContainer(
                   snapshot.data.documents[val]['displayName'],
+                  snapshot.data.documents[val]['uid'],
                   snapshot.data.documents[val]['instrument'],
-                  snapshot.data.documents[val]['photoUrl']);
+                  snapshot.data.documents[val]['photoUrl'],
+                  ctx);
             },
             itemCount: snapshot.data.documents.length,
           );
@@ -67,105 +43,126 @@ class ExplorePage extends StatelessWidget {
     );
   }
 
-  Widget cardsUser(String displyName, String instrument) {
-    return Container(
-      margin: EdgeInsets.only(left: 46.0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(15.0)),
-      child: cardContent(displyName, instrument),
-    );
-  }
-
-  Widget avatarUser(String photoUrl) {
+  Widget userContainer(String name, String uid, String instru, String photoUrl,
+      BuildContext ctx) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, left: 10),
-      child: CircleAvatar(
-        radius: 46.0,
-        backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
-      ),
-    );
-  }
-
-  Widget userRow(String displayName, String instrument, String photoUrl) {
-    return Container(
-      height: 210,
-      margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-      child: Stack(
-        children: <Widget>[
-          cardsUser(displayName, instrument),
-          avatarUser(photoUrl)
-        ],
-      ),
-    );
-  }
-
-  Widget cardContent(String displayName, String instrument) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(76, 16, 16, 16),
-      constraints: BoxConstraints.expand(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            height: 4.0,
-          ),
-          GradientText(
-            "$displayName",
-            gradient: baseGrad(),
-            style: headerTextStyle(),
-          ),
-          Container(
-            height: 4.0,
-          ),
-          Text(
-            "Mumbai, India",
-            style: subheaderTextStyle(),
-          ),
-          Container(
-            height: 4,
-          ),
-          Text(
-            "Hello, I'm John Doe a musician. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            style: regularTextStyle(),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10, bottom: 10),
-            height: 4.0,
-            width: 50,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: Color(0xff32D5EB)),
-          ),
-          Row(
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Favourite instrument: ",
-                    style: subheaderTextStyle(),
+      padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 20),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+            ctx, MaterialPageRoute(builder: (ctx) => ChatPage(toUid: uid))),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60.0),
+              color: Color(0x0effffff)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Center(
+                  child: CircleAvatar(
+                    backgroundImage: photoUrl != "" && photoUrl != null
+                        ? NetworkImage(photoUrl)
+                        : null,
+                    radius: 60,
                   ),
-                  Text(
-                    "$instrument",
-                    style: smallheaderTextStyle(),
-                  ),
-                ],
-              ),
-              Container(width: 10),
-              FlatButton(
-                onPressed: () {},
-                color: Color(0x00ffffff),
-                child: Text(
-                  "Start Talking!",
-                  style:
-                      smallheaderTextStyle().copyWith(color: Color(0xff32d5eb)),
                 ),
-              )
-            ],
+                Container(height: 30),
+                Text(
+                  "John Doe",
+                  style: TextStyles().headerTextStyle().copyWith(fontSize: 28),
+                ),
+                Container(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Image.asset(
+                      "assets/gradient_pin.png",
+                      height: 30,
+                      width: 30,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                        "Mumbai, India",
+                        style: TextStyles()
+                            .subheaderTextStyle()
+                            .copyWith(color: Colors.white60, fontSize: 18),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(height: 30),
+                Text(
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus at ultrices mi tempus imperdiet nulla malesuada pellentesque. Faucibus purus in massa tempor nec feugiat nisl.",
+                  style: TextStyles()
+                      .regularTextStyle()
+                      .copyWith(color: Colors.white, fontSize: 16),
+                ),
+                Container(height: 30),
+                Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Genres",
+                            style: TextStyles()
+                                .headerTextStyle()
+                                .copyWith(fontSize: 20),
+                          ),
+                          Container(height: 8),
+                          Text(
+                            "EDM",
+                            style: TextStyles()
+                                .regularTextStyle()
+                                .copyWith(color: Colors.white, fontSize: 14),
+                          ),
+                          Container(height: 8),
+                          Text(
+                            "Hip Hop",
+                            style: TextStyles()
+                                .regularTextStyle()
+                                .copyWith(color: Colors.white, fontSize: 14),
+                          )
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Instruments",
+                            style: TextStyles()
+                                .headerTextStyle()
+                                .copyWith(fontSize: 20),
+                          ),
+                          Container(height: 8),
+                          Text(
+                            "Cello",
+                            style: TextStyles()
+                                .regularTextStyle()
+                                .copyWith(color: Colors.white, fontSize: 14),
+                          ),
+                          Container(height: 8),
+                          Text(
+                            "Classical Guitar",
+                            style: TextStyles()
+                                .regularTextStyle()
+                                .copyWith(color: Colors.white, fontSize: 14),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

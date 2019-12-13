@@ -7,7 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class BaseAuth {
   Future<FirebaseUser> signIn(String email, String password);
 
-  Future<FirebaseUser> signUp(String email, String password, String name);
+  Future<FirebaseUser> signUp(
+      String email, String password, String name, String bio);
 
   Future<FirebaseUser> getCurrentUser();
 
@@ -50,7 +51,7 @@ class Auth implements BaseAuth {
   }
 
   Future<FirebaseUser> signUp(
-      String email, String password, String name) async {
+      String email, String password, String name, String bio) async {
     AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
     FirebaseUser user = result.user;
@@ -62,7 +63,8 @@ class Auth implements BaseAuth {
     await ref.setData({
       'uid': user.uid,
       'email': user.email,
-      'photoURL': user.photoUrl ?? "",
+      'photoURL': prefs.getString('photoUrl') ?? "",
+      'bio': bio,
       'displayName': name ?? "",
       'lastSeen': DateTime.now(),
       'genre': prefs.getStringList('genres').join(", "),

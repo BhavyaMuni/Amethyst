@@ -18,7 +18,7 @@ class GetStartedPage extends StatelessWidget {
 
   Widget getstart(BuildContext context) {
     return Stack(children: <Widget>[
-      slide_show(context),
+      slideShow(context),
       Container(
         color: Color(0xbf000000),
       ),
@@ -116,7 +116,7 @@ class GetStartedPage extends StatelessWidget {
     ]);
   }
 
-  Widget slide_show(BuildContext context) {
+  Widget slideShow(BuildContext context) {
     List<String> imUrls = [
       "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1650&q=80",
       "https://images.unsplash.com/photo-1525362081669-2b476bb628c3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80",
