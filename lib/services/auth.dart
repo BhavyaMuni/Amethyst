@@ -63,7 +63,7 @@ class Auth implements BaseAuth {
     await ref.setData({
       'uid': user.uid,
       'email': user.email,
-      'photoURL': prefs.getString('photoUrl') ?? "",
+      'photoUrl': prefs.getString('photoUrl') ?? "",
       'bio': bio,
       'displayName': name ?? "",
       'lastSeen': DateTime.now(),
@@ -84,7 +84,7 @@ class Auth implements BaseAuth {
     return ref.setData({
       'uid': user.uid,
       'email': user.email,
-      'photoURL': user.photoUrl ?? "",
+      'photoUrl': user.photoUrl ?? "",
       'displayName': user.displayName ?? "",
       'lastSeen': DateTime.now(),
       'genre': "",

@@ -21,13 +21,10 @@ class HomePage extends StatelessWidget {
       ),
       ProfilePage(
         key: PageStorageKey("Profile_Page"),
-        auth: auth,
       )
     ];
 
-    return Scaffold(
-      body: NavBarController(pages: pages),
-    );
+    return NavBarController(pages: pages);
   }
 }
 
@@ -43,23 +40,26 @@ class NavBarController extends StatefulWidget {
 class _NavBarControllerState extends State<NavBarController> {
   final PageStorageBucket _pageStorageBucket = PageStorageBucket();
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
-    
         onTap: (int index) => setState(() => _selectedIndex = index),
         currentIndex: selectedIndex,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.chat,
-                size: 30,
+              icon: Center(
+                child: Icon(
+                  Icons.chat,
+                  size: 30,
+                ),
               ),
               title: Text("")),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.explore,
-                size: 45,
+              icon: Center(
+                child: Icon(
+                  Icons.explore,
+                  size: 45,
+                ),
               ),
               title: Text("")),
           BottomNavigationBarItem(

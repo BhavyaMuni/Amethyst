@@ -45,7 +45,9 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Widget loading() {
-    return isLoading == true ? CircularProgressIndicator() : Container();
+    return isLoading == true
+        ? Center(child: CircularProgressIndicator())
+        : Container();
   }
 
   @override
@@ -200,10 +202,10 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                 ),
                 Container(
-                  height: 30,
+                  height: 20,
                 ),
                 (_errorMessage == null || _errorMessage == "")
-                    ? null
+                    ? Container()
                     : Center(
                         child: Text(
                         _errorMessage.toString(),
@@ -213,7 +215,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             .copyWith(color: Colors.red),
                       )),
                 Container(
-                  height: 30,
+                  height: 20,
                 ),
                 GradientButton(
                   increaseHeightBy: 25,
@@ -226,7 +228,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                 ),
                 Container(
-                  height: 30,
+                  height: 20,
                 ),
                 Center(
                     child: Text("or connect with:",
@@ -257,7 +259,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                 ),
                 SizedBox(
-                  height: 60,
+                  height: 40,
                 ),
                 Center(
                   child: Text(
