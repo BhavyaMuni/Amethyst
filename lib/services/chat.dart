@@ -19,5 +19,16 @@ class Chat {
         {"messages": message, "createdAt": DateTime.now()}
       ]),
     }, merge: true);
+
+    DocumentReference ref2 = f
+        .collection("chats")
+        .document(fromUid)
+        .collection("messages")
+        .document(userUid);
+    await ref2.setData({
+      "messages": FieldValue.arrayUnion([
+        {"messages": message, "createdAt": DateTime.now(), "fromMsg": true}
+      ]),
+    }, merge: true);
   }
 }
