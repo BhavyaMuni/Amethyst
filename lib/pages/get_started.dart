@@ -1,4 +1,4 @@
-import 'package:amethyst_app/pages/login_page.dart';
+import 'package:amethyst_app/pages/log_in.dart';
 import 'package:amethyst_app/pages/sign_up_sequence.dart';
 import 'package:amethyst_app/services/auth.dart';
 import 'package:amethyst_app/styles.dart';
@@ -35,7 +35,7 @@ class GetStartedPage extends StatelessWidget {
                   height: 70,
                 ),
                 Image.asset(
-                  "assets/logo.png",
+                  "assets/amethyst_logo.png",
                   height: 175,
                   width: 175,
                 ),
@@ -91,6 +91,8 @@ class GetStartedPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 35.0),
                   child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
                     child: Text(
                       "Already have an account?",
                       style: TextStyles()
@@ -101,10 +103,7 @@ class GetStartedPage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => new LoginForm(
-                                    auth: new Auth(),
-                                    isLogin: true,
-                                  )));
+                              builder: (context) => new LoginForm()));
                     },
                   ),
                 )

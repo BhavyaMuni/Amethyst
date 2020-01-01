@@ -70,16 +70,22 @@ class ChatsList extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(right: 15),
                                         child: CircleAvatar(
-                                          radius: 40,
-                                          backgroundColor: Color(0x44000000),
-                                          backgroundImage:
-                                              snappy.data["photoUrl"] != null &&
-                                                      snappy.data["photoUrl"] !=
-                                                          ""
-                                                  ? NetworkImage(
-                                                      snappy.data["photoUrl"])
-                                                  : NetworkImage(""),
-                                        ),
+                                            radius: 40,
+                                            backgroundColor: Color(0x44000000),
+                                            backgroundImage: snappy
+                                                            .data["photoUrl"] !=
+                                                        null &&
+                                                    snappy.data["photoUrl"] !=
+                                                        ""
+                                                ? NetworkImage(
+                                                    snappy.data["photoUrl"])
+                                                : NetworkImage(""),
+                                            child: snappy.data["photoUrl"] !=
+                                                        null &&
+                                                    snappy.data["photoUrl"] !=
+                                                        ""
+                                                ? Icon(MdiIcons.faceProfile)
+                                                : null),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -93,12 +99,35 @@ class ChatsList extends StatelessWidget {
                                                   .copyWith(
                                                       color: Colors.white,
                                                       fontSize: 16)),
-                                          Text("[last_message]",
-                                              style: TextStyles()
-                                                  .regularTextStyle()
-                                                  .copyWith(
-                                                      color: Colors.white54,
-                                                      fontSize: 12))
+                                          StreamBuilder(
+                                              stream: Firestore.instance
+                                                  .collection("chats")
+                                                  .document(user.uid)
+                                                  .collection("messages")
+                                                  .document(snappy.data["uid"])
+                                                  .snapshots(),
+                                              builder: (context, snap) {
+                                                if (!snap.hasData)
+                                                  return Text("Loading...",
+                                                      style: TextStyles()
+                                                          .regularTextStyle()
+                                                          .copyWith(
+                                                              color: Colors
+                                                                  .white54,
+                                                              fontSize: 12));
+                                                return Text(
+                                                    snap.data["messages"][(snap
+                                                            .data["messages"]
+                                                            .length -
+                                                        1)]["messages"],
+                                                    maxLines: 1,
+                                                    style: TextStyles()
+                                                        .regularTextStyle()
+                                                        .copyWith(
+                                                            color:
+                                                                Colors.white54,
+                                                            fontSize: 12));
+                                              })
                                         ],
                                       ),
                                     ],
@@ -158,11 +187,15 @@ class _ChatWindowState extends State<ChatWindow> {
                 children: <Widget>[
                   Flexible(
                     child: CircleAvatar(
-                      backgroundImage: snapshot.data["photoUrl"] != null &&
-                              snapshot.data["photoUrl"] != ""
-                          ? NetworkImage(snapshot.data["photoUrl"])
-                          : NetworkImage(""),
-                    ),
+                        backgroundColor: Color(0x44000000),
+                        backgroundImage: snapshot.data["photoUrl"] != null &&
+                                snapshot.data["photoUrl"] != ""
+                            ? NetworkImage(snapshot.data["photoUrl"])
+                            : NetworkImage(""),
+                        child: snapshot.data["photoUrl"] != null &&
+                                snapshot.data["photoUrl"] != ""
+                            ? Icon(MdiIcons.faceProfile)
+                            : null),
                   ),
                   Flexible(
                     child: Padding(
@@ -180,70 +213,76 @@ class _ChatWindowState extends State<ChatWindow> {
           },
         ),
       ),
-      body: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Flexible(child: chats(widget.toUid, user.uid)),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      new Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Color(0x44000000),
-                              borderRadius: BorderRadius.circular(40)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18.0, vertical: 5),
-                            child: new TextFormField(
-                              style: TextStyles()
-                                  .regularTextStyle()
-                                  .copyWith(color: Colors.white, fontSize: 16),
-                              validator: (val) {
-                                if (val.isEmpty || val == "")
-                                  return "";
-                                else
-                                  return null;
-                              },
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 5.0, vertical: -10)),
-                              onSaved: (val) => message = val.trim(),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+        child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Flexible(child: chats(widget.toUid, user.uid)),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        new Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Color(0x44000000),
+                                borderRadius: BorderRadius.circular(40)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 8),
+                              child: new TextFormField(
+                                minLines: 1,
+                                maxLines: 4,
+                                style: TextStyles().regularTextStyle().copyWith(
+                                    color: Colors.white, fontSize: 16),
+                                validator: (val) {
+                                  if (val.isEmpty || val == "")
+                                    return "";
+                                  else
+                                    return null;
+                                },
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 10)),
+                                onSaved: (val) => message = val.trim(),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      GradientButton(
-                        gradient: TextStyles().baseGrad(),
-                        shape: CircleBorder(),
-                        child: Center(child: Icon(Icons.arrow_forward_ios)),
-                        callback: () {
-                          _formKey.currentState.validate();
-                          _formKey.currentState.save();
-                          _formKey.currentState.reset();
-                          message.isNotEmpty
-                              ? Chat(
-                                      message: message,
-                                      userUid: user.uid,
-                                      fromUid: widget.toUid)
-                                  .createChat()
-                              : null;
-                        },
-                      ),
-                    ],
+                        GradientButton(
+                          increaseHeightBy: 20,
+                          increaseWidthBy: 20,
+                          gradient: TextStyles().baseGrad(),
+                          shape: CircleBorder(),
+                          child: Center(child: Icon(Icons.arrow_forward_ios)),
+                          callback: () {
+                            _formKey.currentState.validate();
+                            _formKey.currentState.save();
+                            _formKey.currentState.reset();
+                            message.isNotEmpty
+                                ? Chat(
+                                        message: message,
+                                        userUid: user.uid,
+                                        fromUid: widget.toUid)
+                                    .createChat()
+                                : null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )),
+              ],
+            )),
+      ),
     );
   }
 
@@ -263,7 +302,9 @@ class _ChatWindowState extends State<ChatWindow> {
             .document(toUid)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) return CircularProgressIndicator();
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
           if (snapshot.data.data == null) {
             return Center(
               child: Text("Start chatting!",
@@ -272,57 +313,59 @@ class _ChatWindowState extends State<ChatWindow> {
                       .copyWith(color: Colors.white54, fontSize: 14)),
             );
           } else {
-            return ListView.builder(
-              itemBuilder: (context, val) {
-                if (snapshot.data["messages"][val]["fromMsg"] != true) {
-                  return Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            color: Color(0x44000000)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Text(
-                              snapshot.data["messages"][val]["messages"],
-                              style: TextStyles()
-                                  .regularTextStyle()
-                                  .copyWith(color: Colors.white, fontSize: 16)),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: ListView.builder(
+                itemBuilder: (context, val) {
+                  if (snapshot.data["messages"][val]["fromMsg"] != true) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: Color(0x44000000)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                                snapshot.data["messages"][val]["messages"],
+                                style: TextStyles().regularTextStyle().copyWith(
+                                    color: Colors.white, fontSize: 16)),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                } else {
-                  return Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                                color: Color(0x44000000)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Text(
-                                  snapshot.data["messages"][val]["messages"],
-                                  style: TextStyles()
-                                      .regularTextStyle()
-                                      .copyWith(
-                                          color: Colors.white, fontSize: 16)),
-                            ),
-                          )));
-                }
+                    );
+                  } else {
+                    return Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                  color: Color(0x44000000)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Text(
+                                    snapshot.data["messages"][val]["messages"],
+                                    style: TextStyles()
+                                        .regularTextStyle()
+                                        .copyWith(
+                                            color: Colors.white, fontSize: 16)),
+                              ),
+                            )));
+                  }
 
-                // return Center(
-                //   child: Text("Start chatting!",
-                //       style: TextStyles()
-                //           .regularTextStyle()
-                //           .copyWith(color: Colors.white54, fontSize: 14)),
-                // );
-              },
-              itemCount: snapshot.data["messages"].length,
+                  // return Center(
+                  //   child: Text("Start chatting!",
+                  //       style: TextStyles()
+                  //           .regularTextStyle()
+                  //           .copyWith(color: Colors.white54, fontSize: 14)),
+                  // );
+                },
+                itemCount: snapshot.data["messages"].length,
+              ),
             );
           }
         },

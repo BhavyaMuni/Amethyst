@@ -72,11 +72,14 @@ class _GenrePageState extends State<GenrePage> {
                 ],
               ),
             ),
-            Container(
-              child: Text(selectedGenres.join(", "),
-                  style: TextStyles()
-                      .regularTextStyle()
-                      .copyWith(color: Colors.white, fontSize: 18)),
+            Center(
+              child: Container(
+                child: Text(selectedGenres.join(", "),
+                    textAlign: TextAlign.center,
+                    style: TextStyles()
+                        .regularTextStyle()
+                        .copyWith(color: Colors.white, fontSize: 18)),
+              ),
             ),
             Container(
               child: Center(
@@ -205,11 +208,14 @@ class _InstrumentPageState extends State<InstrumentPage> {
                 ),
               ],
             ),
-            Container(
-              child: Text(selectedIntrus.join(", "),
-                  style: TextStyles()
-                      .regularTextStyle()
-                      .copyWith(color: Colors.white, fontSize: 18)),
+            Center(
+              child: Container(
+                child: Text(selectedIntrus.join(", "),
+                    textAlign: TextAlign.center,
+                    style: TextStyles()
+                        .regularTextStyle()
+                        .copyWith(color: Colors.white, fontSize: 18)),
+              ),
             ),
             Container(
               child: Center(

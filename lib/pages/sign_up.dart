@@ -1,3 +1,4 @@
+import 'package:amethyst_app/pages/log_in.dart';
 import 'package:amethyst_app/services/auth.dart';
 import 'package:amethyst_app/services/database.dart';
 import 'package:amethyst_app/styles.dart';
@@ -231,36 +232,53 @@ class _RegisterFormState extends State<RegisterForm> {
                   height: 20,
                 ),
                 Center(
-                    child: Text("or connect with:",
-                        style: TextStyles()
-                            .regularTextStyle()
-                            .copyWith(color: Colors.white, fontSize: 14))),
-                Container(
-                  height: 10,
+                  child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil("/root", (route) => false);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new LoginForm()));
+                      },
+                      child: Text("Already have an account? Log in!",
+                          style: TextStyles()
+                              .regularTextStyle()
+                              .copyWith(color: Colors.white, fontSize: 14))),
                 ),
-                Center(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlatButton.icon(
-                        label: Text(""),
-                        icon: Center(child: Icon(MdiIcons.google)),
-                        onPressed: () {},
-                        shape: CircleBorder(),
-                      ),
-                      FlatButton.icon(
-                        label: Text(""),
-                        icon: Center(child: Icon(MdiIcons.facebook)),
-                        onPressed: () {},
-                        shape: CircleBorder(),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
+                // Center(
+                //     child: Text("or connect with:",
+                //         style: TextStyles()
+                //             .regularTextStyle()
+                //             .copyWith(color: Colors.white, fontSize: 14))),
+                // Container(
+                //   height: 10,
+                // ),
+                // Center(
+                //   child: Row(
+                //     crossAxisAlignment: CrossAxisAlignment.center,
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: <Widget>[
+                //       FlatButton.icon(
+                //         label: Text(""),
+                //         icon: Center(child: Icon(MdiIcons.google)),
+                //         onPressed: () {},
+                //         shape: CircleBorder(),
+                //       ),
+                //       FlatButton.icon(
+                //         label: Text(""),
+                //         icon: Center(child: Icon(MdiIcons.facebook)),
+                //         onPressed: () {},
+                //         shape: CircleBorder(),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 40,
+                // ),
                 Center(
                   child: Text(
                       "By continuing you are agreeing to our Terms of Service and Privacy and Cookie Policy",

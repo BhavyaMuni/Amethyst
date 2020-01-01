@@ -166,7 +166,7 @@ class ExplorePage extends StatelessWidget {
 
   Widget listInstru(List instru) {
     return Container(
-      height: 80,
+      height: 100,
       child: Center(
         child: ListView.builder(
           physics: NeverScrollableScrollPhysics(),
@@ -189,7 +189,7 @@ class ExplorePage extends StatelessWidget {
 
   Widget listGenre(List genre) {
     return Container(
-      height: 80,
+      height: 100,
       child: Center(
         child: ListView.builder(
           physics: NeverScrollableScrollPhysics(),
