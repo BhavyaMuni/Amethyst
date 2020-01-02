@@ -51,6 +51,10 @@ class Auth implements BaseAuth {
     AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
     FirebaseUser user = result.user;
+    await Firestore.instance
+        .collection("users")
+        .document(user.uid)
+        .updateData({"lastSeen": DateTime.now()});
     return user;
   }
 

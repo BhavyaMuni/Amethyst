@@ -97,8 +97,8 @@ class ExplorePage extends StatelessWidget {
                     children: <Widget>[
                       Image.asset(
                         "assets/gradient_pin.png",
-                        height: 30,
-                        width: 30,
+                        height: 20,
+                        width: 20,
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 10),
@@ -132,7 +132,7 @@ class ExplorePage extends StatelessWidget {
                           Text("Genres",
                               style: TextStyles()
                                   .headerTextStyle()
-                                  .copyWith(fontSize: 20)),
+                                  .copyWith(fontSize: 18)),
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: listGenre(genre.split(", ")),
@@ -146,7 +146,7 @@ class ExplorePage extends StatelessWidget {
                           Text("Instruments",
                               style: TextStyles()
                                   .headerTextStyle()
-                                  .copyWith(fontSize: 20)),
+                                  .copyWith(fontSize: 18)),
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: listInstru(instru.split(", ")),

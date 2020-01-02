@@ -35,10 +35,7 @@ class ChatsList extends StatelessWidget {
         }
         if (!snapshot.hasData) {
           return Center(
-            child: Text("Loading...",
-                style: TextStyles()
-                    .regularTextStyle()
-                    .copyWith(color: Colors.white, fontSize: 16)),
+            child: CircularProgressIndicator(),
           );
         } else {
           return StreamBuilder(
@@ -84,8 +81,8 @@ class ChatsList extends StatelessWidget {
                                                         null &&
                                                     snappy.data["photoUrl"] !=
                                                         ""
-                                                ? Icon(MdiIcons.faceProfile)
-                                                : null),
+                                                ? null
+                                                : Icon(MdiIcons.faceProfile)),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -194,8 +191,8 @@ class _ChatWindowState extends State<ChatWindow> {
                             : NetworkImage(""),
                         child: snapshot.data["photoUrl"] != null &&
                                 snapshot.data["photoUrl"] != ""
-                            ? Icon(MdiIcons.faceProfile)
-                            : null),
+                            ? null
+                            : Icon(MdiIcons.faceProfile)),
                   ),
                   Flexible(
                     child: Padding(
