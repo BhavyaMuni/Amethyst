@@ -47,7 +47,7 @@ class _NavBarControllerState extends State<NavBarController> {
   Widget _bottomNavigationBar(int selectedIndex) => Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
-            color: Color(0x0affffff)),
+            color: Color(0xff3b3b3b)),
         child: BottomNavigationBar(
           elevation: 0,
           backgroundColor: Colors.transparent,

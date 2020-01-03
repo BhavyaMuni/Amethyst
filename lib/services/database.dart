@@ -103,7 +103,15 @@ class _ImageSelectState extends State<ImageSelect> {
             height: 50,
             child: Icon(MdiIcons.camera),
             decoration: BoxDecoration(
-                shape: BoxShape.circle, gradient: TextStyles().baseGrad()),
+                shape: BoxShape.circle,
+                gradient: TextStyles().baseGrad(),
+                boxShadow: [
+                  BoxShadow(
+                      color: Color(0x44000000),
+                      offset: Offset(10, 10),
+                      blurRadius: 20,
+                      spreadRadius: 5),
+                ]),
           )
         ],
       ),

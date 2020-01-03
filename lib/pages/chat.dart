@@ -45,6 +45,10 @@ class ChatsList extends StatelessWidget {
                 itemBuilder: (context, val) {
                   DocumentSnapshot doc = snapshot.data.documents[val];
                   return StreamBuilder(
+                    stream: Firestore.instance
+                        .collection("users")
+                        .document(doc.documentID)
+                        .snapshots(),
                     builder: (context, snappy) {
                       if (!snappy.hasData) {
                         return Padding(
@@ -53,12 +57,26 @@ class ChatsList extends StatelessWidget {
                         );
                       } else {
                         return FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                   height: 80,
                                   decoration: BoxDecoration(
-                                      color: Color(0x0effffff),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0x44000000),
+                                            offset: Offset(10, 10),
+                                            blurRadius: 20,
+                                            spreadRadius: 5),
+                                        BoxShadow(
+                                            color: Color(0x0effffff),
+                                            offset: Offset(-10, -10),
+                                            blurRadius: 20,
+                                            spreadRadius: 5)
+                                      ],
+                                      color: Color(0xff3b3b3b),
                                       borderRadius:
                                           BorderRadius.circular(40.0)),
                                   child: Row(
@@ -138,10 +156,6 @@ class ChatsList extends StatelessWidget {
                                         ))));
                       }
                     },
-                    stream: Firestore.instance
-                        .collection("users")
-                        .document(doc.documentID)
-                        .snapshots(),
                   );
                 },
                 itemCount: snapshot.data.documents.length,
@@ -271,7 +285,6 @@ class _ChatWindowState extends State<ChatWindow> {
                                         fromUid: widget.toUid)
                                     .createChat()
                                 : null;
-                                
                           },
                         ),
                       ],
