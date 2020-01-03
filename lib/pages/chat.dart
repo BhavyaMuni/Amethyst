@@ -271,6 +271,7 @@ class _ChatWindowState extends State<ChatWindow> {
                                         fromUid: widget.toUid)
                                     .createChat()
                                 : null;
+                                
                           },
                         ),
                       ],

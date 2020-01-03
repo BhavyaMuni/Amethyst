@@ -3,7 +3,6 @@ import 'package:amethyst_app/styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_text/gradient_text.dart';
 import 'package:provider/provider.dart';
 
 class ExplorePage extends StatelessWidget {
@@ -62,8 +61,20 @@ class ExplorePage extends StatelessWidget {
             ctx, MaterialPageRoute(builder: (ctx) => ChatWindow(toUid: uid))),
         child: Container(
           decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Color(0x44000000),
+                    offset: Offset(10, 10),
+                    blurRadius: 20,
+                    spreadRadius: 5),
+                BoxShadow(
+                    color: Color(0x0effffff),
+                    offset: Offset(-10, -10),
+                    blurRadius: 20,
+                    spreadRadius: 5)
+              ],
               borderRadius: BorderRadius.circular(60.0),
-              color: Color(0x0effffff)),
+              color: Color(0xff3b3b3b)),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 30),
             child: Column(

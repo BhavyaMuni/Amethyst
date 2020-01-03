@@ -20,19 +20,20 @@ class ImageSelect extends StatefulWidget {
 
 class _ImageSelectState extends State<ImageSelect> {
   File _imageFile;
-
-  Future<void> _pickImage(ImageSource source) async {
-    File selected = await ImagePicker.pickImage(source: source);
-
-    setState(() {
-      _imageFile = selected;
-    });
-  }
-
   bool _loading = false;
 
   StorageUploadTask _uploadTask;
   String downloadUrl;
+
+  Future<void> _pickImage(ImageSource source) async {
+    File selected = await ImagePicker.pickImage(source: source);
+
+    if (selected != null) {
+      setState(() {
+        _imageFile = selected;
+      });
+    }
+  }
 
   /// Starts an upload task
   void _startUpload(String userUid) async {
@@ -43,7 +44,11 @@ class _ImageSelectState extends State<ImageSelect> {
         .ref()
         .child("profile_pictures/${DateTime.now()}.png");
 
-    _uploadTask = _storage.putFile(_imageFile);
+    if (_imageFile != null) {
+      _uploadTask = _storage.putFile(_imageFile);
+    } else {
+      _loading = false;
+    }
 
     var _downloadUrl =
         (await (await _uploadTask.onComplete).ref.getDownloadURL()).toString();
