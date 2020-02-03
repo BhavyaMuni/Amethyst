@@ -126,22 +126,22 @@ class GetStartedPage extends StatelessWidget {
       Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(imUrls[0]), fit: BoxFit.cover)),
+                image: NetworkImage(imUrls[0] ?? ""), fit: BoxFit.cover)),
       ),
       Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(imUrls[1]), fit: BoxFit.cover)),
+                image: NetworkImage(imUrls[1] ?? ""), fit: BoxFit.cover)),
       ),
       Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(imUrls[2]), fit: BoxFit.cover)),
+                image: NetworkImage(imUrls[2] ?? ""), fit: BoxFit.cover)),
       ),
       Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(imUrls[3]), fit: BoxFit.cover)),
+                image: NetworkImage(imUrls[3] ?? ""), fit: BoxFit.cover)),
       ),
     ];
 
