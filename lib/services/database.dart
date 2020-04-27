@@ -31,12 +31,13 @@ class _ImageSelectState extends State<ImageSelect> {
     if (selected != null) {
       setState(() {
         _imageFile = selected;
+        _loading = false;
       });
     }
   }
 
   /// Starts an upload task
-  void _startUpload(String userUid) async {
+  void startUpload(String userUid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     /// Unique file name for the file
@@ -74,28 +75,27 @@ class _ImageSelectState extends State<ImageSelect> {
 
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<FirebaseUser>(context);
+    // var user = Provider.of<FirebaseUser>(context);
 
     return GestureDetector(
       onTap: () async {
         await _pickImage(ImageSource.gallery);
-        try {
-          _startUpload(user.uid);
-        } catch (e) {
-          _startUpload(null);
-        }
-        setState(() {
-          _loading = true;
-        });
+        // try {
+        //   _startUpload(user.uid);
+        // } catch (e) {
+        //   _startUpload(null);
+        // }
       },
       child: Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: <Widget>[
           CircleAvatar(
             backgroundColor: Color(0x44000000),
-            child: showLoading(),
+            child: _imageFile == null
+                ? Icon(MdiIcons.faceProfile, size: 40)
+                : null,
             radius: 80,
-            backgroundImage: showImage(),
+            backgroundImage: _imageFile != null ? FileImage(_imageFile) : null,
           ),
           Container(
             margin: EdgeInsets.fromLTRB(20, 0, 0, 0),

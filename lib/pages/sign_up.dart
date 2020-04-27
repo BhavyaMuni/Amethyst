@@ -1,6 +1,14 @@
+import 'dart:io';
+import 'package:provider/provider.dart';
 import 'package:amethyst_app/pages/log_in.dart';
 import 'package:amethyst_app/services/auth.dart';
-import 'package:amethyst_app/services/database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:amethyst_app/services/database.dart';
+// import 'package:amethyst_app/services/database.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:amethyst_app/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
@@ -29,6 +37,8 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = new GlobalKey<FormState>();
+
+  final _imKey = GlobalKey<_ImageSelectState>();
 
   bool isLoading = false;
   String _errorMessage;
@@ -64,7 +74,7 @@ class _RegisterFormState extends State<RegisterForm> {
               shrinkWrap: true,
               children: <Widget>[
                 Center(
-                  child: ImageSelect(),
+                  child: ImageSelect(key: _imKey),
                 ),
                 Container(
                   height: 30,
@@ -279,14 +289,17 @@ class _RegisterFormState extends State<RegisterForm> {
                 // SizedBox(
                 //   height: 40,
                 // ),
-                Center(
-                  child: Text(
-                      "By continuing you are agreeing to our Terms of Service and Privacy and Cookie Policy",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400)),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Center(
+                    child: Text(
+                        "By continuing you are agreeing to our Terms of Service and Privacy and Cookie Policy",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400)),
+                  ),
                 ),
               ],
             ),
@@ -315,7 +328,7 @@ class _RegisterFormState extends State<RegisterForm> {
       String userId = "";
       try {
         userId = (await widget.auth.signUp(_email, _password, _name, _bio)).uid;
-
+        print(await _imKey.currentState.startUpload(userId));
         //widget.auth.sendEmailVerification();
         //_showVerifyEmailSentDialog();
         print('Signed up user: $userId');
@@ -333,5 +346,119 @@ class _RegisterFormState extends State<RegisterForm> {
       }
       Navigator.of(context).pushNamedAndRemoveUntil("/root", (route) => false);
     }
+  }
+}
+
+class ImageSelect extends StatefulWidget {
+  ImageSelect({Key key, this.imUrl}) : super(key: key);
+  final String imUrl;
+
+  @override
+  _ImageSelectState createState() => _ImageSelectState();
+}
+
+class _ImageSelectState extends State<ImageSelect> {
+  File _imageFile;
+  bool _loading = false;
+
+  StorageUploadTask _uploadTask;
+  String downloadUrl;
+
+  Future<void> _pickImage(ImageSource source) async {
+    File selected = await ImagePicker.pickImage(source: source);
+
+    if (selected != null) {
+      setState(() {
+        _imageFile = selected;
+        _loading = false;
+      });
+    }
+  }
+
+  /// Starts an upload task
+  Future<String> startUpload(String userUid) async {
+    var user = Provider.of<FirebaseUser>(context, listen: false);
+
+    /// Unique file name for the file
+    final StorageReference _storage = FirebaseStorage.instance
+        .ref()
+        .child("profile_pictures/${DateTime.now()}-$userUid.png");
+
+    if (_imageFile != null) {
+      _uploadTask = _storage.putFile(_imageFile);
+      print("uploading");
+    } else {
+      _loading = false;
+      print("no file selected");
+    }
+
+    var _downloadUrl =
+        (await (await _uploadTask.onComplete).ref.getDownloadURL()).toString();
+
+    if (userUid != null && userUid != "") {
+      Firestore.instance
+          .collection("users")
+          .document(userUid)
+          .updateData({"photoUrl": _downloadUrl});
+    }
+    setState(() {
+      _loading = false;
+    });
+    UserUpdateInfo updateInfo = UserUpdateInfo();
+    updateInfo.photoUrl = _downloadUrl;
+    await user.updateProfile(updateInfo).catchError(() {
+      print("Error changing user profile");
+    });
+
+    return _downloadUrl;
+  }
+
+  void _clear() {
+    setState(() => _imageFile = null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var user = Provider.of<FirebaseUser>(context, listen: false);
+
+    return GestureDetector(
+      onTap: () async {
+        await _pickImage(ImageSource.gallery);
+        // try {
+        //   _startUpload(user.uid);
+        // } catch (e) {
+        //   _startUpload(null);
+        // }
+      },
+      child: Stack(
+        alignment: AlignmentDirectional.bottomEnd,
+        children: <Widget>[
+          CircleAvatar(
+            backgroundColor: Color(0x44000000),
+            child: _imageFile == null
+                ? Icon(MdiIcons.faceProfile, size: 40)
+                : null,
+            radius: 80,
+            backgroundImage: _imageFile != null ? FileImage(_imageFile) : null,
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+            width: 50,
+            height: 50,
+            child: Icon(MdiIcons.camera),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: TextStyles().baseGrad(),
+                boxShadow: [
+                  BoxShadow(
+                      color: Color(0x44000000),
+                      offset: Offset(10, 10),
+                      blurRadius: 20,
+                      spreadRadius: 5),
+                ]),
+          )
+        ],
+      ),
+    );
   }
 }

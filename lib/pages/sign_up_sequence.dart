@@ -289,6 +289,8 @@ class _InstrumentPageState extends State<InstrumentPage> {
   }
 }
 
+
+
 class SignUpFinalPage extends StatefulWidget {
   SignUpFinalPage({Key key}) : super(key: key);
 
