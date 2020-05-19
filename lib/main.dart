@@ -2,9 +2,12 @@ import 'package:amethyst_app/pages/get_started.dart';
 import 'package:amethyst_app/pages/home_page.dart';
 import 'package:amethyst_app/pages/sign_up_sequence.dart';
 import 'package:amethyst_app/services/auth.dart';
+import 'package:amethyst_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'models/user_model.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,6 +19,8 @@ class MyApp extends StatelessWidget {
         providers: [
           StreamProvider<FirebaseUser>.value(
               value: FirebaseAuth.instance.onAuthStateChanged),
+          StreamProvider<List<User>>.value(
+              value: DatabaseService().getAllUsers()),
         ],
         child: MaterialApp(
           title: 'Flutter Demo',
@@ -36,7 +41,7 @@ class MyApp extends StatelessWidget {
               primaryColor: Color(0xffB339F6),
               primaryColorDark: Color(0xffb339f6),
               textTheme:
-                  Theme.of(context).textTheme.apply(fontFamily: 'AvenirLTStd')),
+                  Theme.of(context).textTheme.apply(fontFamily: 'Nunito')),
           home: new RootPage(),
         ));
   }

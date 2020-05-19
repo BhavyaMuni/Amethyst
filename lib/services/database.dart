@@ -1,148 +1,80 @@
-import 'dart:io';
-
-import 'package:amethyst_app/styles.dart';
+import 'package:amethyst_app/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ImageSelect extends StatefulWidget {
-  ImageSelect({Key key, this.imUrl}) : super(key: key);
-  final String imUrl;
+class DatabaseService {
+  final _db = Firestore.instance;
 
-  @override
-  _ImageSelectState createState() => _ImageSelectState();
-}
-
-class _ImageSelectState extends State<ImageSelect> {
-  File _imageFile;
-  bool _loading = false;
-
-  StorageUploadTask _uploadTask;
-  String downloadUrl;
-
-  Future<void> _pickImage(ImageSource source) async {
-    File selected = await ImagePicker.pickImage(source: source);
-
-    if (selected != null) {
-      setState(() {
-        _imageFile = selected;
-        _loading = false;
-      });
-    }
+  Stream<List<User>> getAllUsers() {
+    var ref = _db.collection('users');
+    return ref.snapshots().map(
+        (list) => list.documents.map((e) => User.fromFirestore(e)).toList());
   }
 
-  /// Starts an upload task
-  void startUpload(String userUid) async {
+  Future<User> getUser(String uid) async {
+    var doc = await _db.collection('users').document(uid).get();
+    return User.fromFirestore(doc);
+  }
+
+  Stream<User> streamUser(String uid) {
+    var snap = _db.collection('users').document(uid).snapshots();
+    return snap.map((user) => User.fromFirestore(user));
+  }
+
+  List<String> getSortedUserList(User user, List<User> users) {
+    Map<String, int> userSameDict = {};
+    List combineListUser;
+    String currUid;
+    try {
+      combineListUser = user.instruments + user.genres;
+      currUid = user.uid;
+    } catch (e) {
+      combineListUser = [];
+      currUid = '';
+    }
+    // List combineListUser = user.instruments + user.genres;
+    for (var i in users) {
+      if (i.uid == currUid) continue;
+      String userUid = i.uid;
+      List combineList = i.instruments + i.genres;
+      int numsame = numOfSameElements(combineList, combineListUser);
+
+      userSameDict[userUid] = numsame;
+    }
+    var sortedDict = userSameDict.keys.toList(growable: false)
+      ..sort((k1, k2) => userSameDict[k1].compareTo(userSameDict[k2]));
+
+    List<String> userUidsSorted = sortedDict.reversed.toList();
+
+    return userUidsSorted;
+  }
+
+  Future<void> createUser(FirebaseUser user, String name, String bio) async {
+    DocumentReference ref = _db.collection('users').document(user.uid);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    /// Unique file name for the file
-    final StorageReference _storage = FirebaseStorage.instance
-        .ref()
-        .child("profile_pictures/${DateTime.now()}.png");
-
-    if (_imageFile != null) {
-      _uploadTask = _storage.putFile(_imageFile);
-    } else {
-      _loading = false;
-    }
-
-    var _downloadUrl =
-        (await (await _uploadTask.onComplete).ref.getDownloadURL()).toString();
-
-    if (userUid != null && userUid != "") {
-      Firestore.instance
-          .collection("users")
-          .document(userUid)
-          .updateData({"photoUrl": _downloadUrl});
-    } else {
-      prefs.setString('photoUrl', _downloadUrl);
-    }
-
-    setState(() {
-      downloadUrl = _downloadUrl;
-      _loading = false;
-    });
+    await ref.setData({
+      'uid': user.uid,
+      'email': user.email,
+      'photoUrl': prefs.getString('photoUrl') ?? "",
+      'bio': bio,
+      'displayName': name ?? "",
+      'lastSeen': DateTime.now(),
+      'genre': prefs.getString('genres'),
+      'instrument': prefs.getString('instruments')
+    }, merge: true);
   }
 
-  void _clear() {
-    setState(() => _imageFile = null);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // var user = Provider.of<FirebaseUser>(context);
-
-    return GestureDetector(
-      onTap: () async {
-        await _pickImage(ImageSource.gallery);
-        // try {
-        //   _startUpload(user.uid);
-        // } catch (e) {
-        //   _startUpload(null);
-        // }
-      },
-      child: Stack(
-        alignment: AlignmentDirectional.bottomEnd,
-        children: <Widget>[
-          CircleAvatar(
-            backgroundColor: Color(0x44000000),
-            child: _imageFile == null
-                ? Icon(MdiIcons.faceProfile, size: 40)
-                : null,
-            radius: 80,
-            backgroundImage: _imageFile != null ? FileImage(_imageFile) : null,
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-            width: 50,
-            height: 50,
-            child: Icon(MdiIcons.camera),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: TextStyles().baseGrad(),
-                boxShadow: [
-                  BoxShadow(
-                      color: Color(0x44000000),
-                      offset: Offset(10, 10),
-                      blurRadius: 20,
-                      spreadRadius: 5),
-                ]),
-          )
-        ],
-      ),
-    );
-  }
-
-  NetworkImage showImage() {
-    if (widget.imUrl != null) {
-      return NetworkImage(widget.imUrl);
-    } else {
-      if (downloadUrl != null && downloadUrl.length != 0) {
-        return NetworkImage(downloadUrl);
-      } else {
-        return NetworkImage("");
+  int numOfSameElements(List list1, List list2) {
+    int numSame = 0;
+    for (String i in list1) {
+      for (String j in list2) {
+        if (i == j) {
+          numSame += 1;
+        }
       }
     }
-  }
 
-  Widget showLoading() {
-    if (_loading == true) {
-      return CircularProgressIndicator();
-    } else {
-      if (downloadUrl != null && downloadUrl.length != 0 ||
-          widget.imUrl != null) {
-        return Container();
-      } else {
-        return Icon(
-          MdiIcons.faceProfile,
-          size: 40,
-        );
-      }
-    }
+    return numSame;
   }
 }

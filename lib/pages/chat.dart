@@ -221,6 +221,15 @@ class _ChatWindowState extends State<ChatWindow> {
                   )
                 ],
               );
+            else
+              return Center(
+                child: Text(
+                  "Discover people and start chatting!",
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyles().subheaderTextStyle().copyWith(fontSize: 30),
+                ),
+              );
           },
         ),
       ),

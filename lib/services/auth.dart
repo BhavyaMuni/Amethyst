@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'package:amethyst_app/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -28,7 +29,6 @@ abstract class BaseAuth {
 
 class Auth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final _db = Firestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<FirebaseUser> googleSignIn() async {
@@ -39,7 +39,7 @@ class Auth implements BaseAuth {
         GoogleAuthProvider.getCredential(
             accessToken: auth.accessToken, idToken: auth.idToken));
     FirebaseUser user = res.user;
-    updateUserData(user);
+    // updateUserData(user);
     return user;
   }
 
@@ -61,39 +61,14 @@ class Auth implements BaseAuth {
     FirebaseUser user = result.user;
 
     FirebaseUser user2 = await signIn(email, password);
-
-    DocumentReference ref = _db.collection('users').document(user.uid);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await ref.setData({
-      'uid': user.uid,
-      'email': user.email,
-      'photoUrl': prefs.getString('photoUrl') ?? "",
-      'bio': bio,
-      'displayName': name ?? "",
-      'lastSeen': DateTime.now(),
-      'genre': prefs.getStringList('genres').join(", "),
-      'instrument': prefs.getString('instrument')
-    }, merge: true);
+    DatabaseService dbService = DatabaseService();
+    await dbService.createUser(user, name, bio);
     return user2;
   }
 
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user;
-  }
-
-  void updateUserData(FirebaseUser user) async {
-    DocumentReference ref = _db.collection('users').document(user.uid);
-
-    return ref.setData({
-      'uid': user.uid,
-      'email': user.email,
-      'photoUrl': user.photoUrl ?? "",
-      'displayName': user.displayName ?? "",
-      'lastSeen': DateTime.now(),
-      'genre': "",
-      'instrument': "",
-    }, merge: true);
   }
 
   Future<void> signOut() async {

@@ -1,12 +1,12 @@
 import 'package:amethyst_app/pages/chat.dart';
-import 'package:amethyst_app/pages/explore.dart';
+import 'package:amethyst_app/pages/explore_page/explore.dart';
 import 'package:amethyst_app/pages/profile.dart';
 import 'package:amethyst_app/services/auth.dart';
 import 'package:amethyst_app/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+// import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key, this.auth, this.user}) : super(key: key);

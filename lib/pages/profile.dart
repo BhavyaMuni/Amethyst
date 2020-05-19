@@ -1,6 +1,10 @@
+import 'package:amethyst_app/models/user_model.dart';
 import 'package:amethyst_app/services/auth.dart';
 import 'package:amethyst_app/services/database.dart';
+import 'package:amethyst_app/services/image_storage.dart';
 import 'package:amethyst_app/styles.dart';
+import 'package:amethyst_app/widgets/form_field.dart';
+import 'package:amethyst_app/widgets/list_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +22,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
+    var user = Provider.of<FirebaseUser>(context);
     return Scaffold(
-      body: Profile(
-        auth: Auth(),
+      body: StreamProvider.value(
+        value: DatabaseService().streamUser(user.uid),
+        child: Profile(
+          auth: Auth(),
+        ),
       ),
     );
   }
@@ -37,12 +45,17 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final _formKey = new GlobalKey<FormState>();
-
+  final GlobalKey<ImageSelectState> _imKey = GlobalKey();
+  final GlobalKey<ListGenresAndInstrumentsState> _listPrefKey = GlobalKey();
   bool isLoading = false;
   String _errorMessage;
 
   String _name;
   String _bio;
+  List<String> genres;
+  List<String> instruments;
+
+  DatabaseService _databaseService = DatabaseService();
 
   @override
   void initState() {
@@ -57,147 +70,99 @@ class _ProfileState extends State<Profile> {
         : Container();
   }
 
+  nameCb(name) {
+    _name = name;
+  }
+
+  bioCb(name) {
+    _bio = name;
+  }
+
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<FirebaseUser>(context);
-
     return StreamBuilder(
-        stream: Firestore.instance
-            .collection('users')
-            .document(user.uid)
-            .snapshots(),
+        stream: _databaseService.streamUser(user.uid),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Form(
-                key: _formKey,
-                child: Stack(
-                  children: <Widget>[
-                    ListView(children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: FlatButton(
-                              onPressed: () =>
-                                  showLogoutDialog(context, widget.auth),
-                              child: Icon(MdiIcons.logoutVariant),
-                            ),
+          if (!snapshot.hasData)
+            return Center(child: CircularProgressIndicator());
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Form(
+              key: _formKey,
+              child: Stack(
+                children: <Widget>[
+                  ListView(children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: FlatButton(
+                            onPressed: () =>
+                                showLogoutDialog(context, widget.auth),
+                            child: Icon(MdiIcons.logoutVariant),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20.0, horizontal: 40),
-                            child: Center(
-                              child: ImageSelect(
-                                imUrl: snapshot.data["photoUrl"],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 40),
-                            child: Text(
-                              "Name: ",
-                              style: TextStyles()
-                                  .headerTextStyle()
-                                  .copyWith(fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 40.0),
-                            child: Container(
-                              margin: EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(40.0),
-                                  color: Color(0x44000000)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: TextFormField(
-                                  initialValue: snapshot.data["displayName"],
-                                  validator: (val) => val.isEmpty
-                                      ? "Name can\'t be empty"
-                                      : null,
-                                  onSaved: (val) => _name = val.trim(),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyles()
-                                      .regularTextStyle()
-                                      .copyWith(
-                                          color: Colors.white, fontSize: 14),
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Your name"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 40),
-                            child: Text(
-                              "Bio: ",
-                              style: TextStyles()
-                                  .headerTextStyle()
-                                  .copyWith(fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 40),
-                            child: Container(
-                              margin: EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(40.0),
-                                  color: Color(0x44000000)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0, vertical: 4.0),
-                                child: TextFormField(
-                                  maxLines: 7,
-                                  initialValue: snapshot.data["bio"],
-                                  validator: (val) => val.isEmpty
-                                      ? "Bio can\'t be empty"
-                                      : null,
-                                  onSaved: (val) => _bio = val.trim(),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyles()
-                                      .regularTextStyle()
-                                      .copyWith(
-                                          color: Colors.white, fontSize: 14),
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Something about you"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(_errorMessage.toString()),
-                        ],
-                      ),
-                      GradientButton(
-                        increaseHeightBy: 20,
-                        increaseWidthBy: 80,
-                        callback: () => validateAndSubmit(user.uid),
-                        gradient: TextStyles().baseGrad(),
-                        child: Text(
-                          "Save Changes",
-                          style: TextStyles().headerTextStyle(),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20.0, horizontal: 40),
+                          child: Center(
+                            child: ImageSelect(
+                              key: _imKey,
+                              imUrl: user.photoUrl ?? "",
+                            ),
+                          ),
+                        ),
+                        //
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 40),
+                          child: FormTextField(
+                            initVal: snapshot.data.name,
+                            hintText: "Your name",
+                            text: "Name",
+                            cb: nameCb,
+                          ),
+                        ),
+                        //
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 40),
+                          child: FormTextField(
+                            initVal: snapshot.data.bio,
+                            hintText: "Something about you",
+                            text: "Bio",
+                            cb: bioCb,
+                          ),
+                        ),
+                        ListGenresAndInstruments(
+                          key: _listPrefKey,
+                          editable: true,
+                          instruments: snapshot.data.instruments,
+                          genres: snapshot.data.genres,
+                        ),
+                        Text(_errorMessage.toString()),
+                      ],
+                    ),
+                    GradientButton(
+                      increaseHeightBy: 20,
+                      increaseWidthBy: 80,
+                      callback: () =>
+                          validateAndSubmit(user.uid, snapshot.data),
+                      gradient: TextStyles().baseGrad(),
+                      child: Text(
+                        "Save Changes",
+                        style: TextStyles().headerTextStyle(),
                       ),
-                    ]),
-                    loading()
-                  ],
-                ),
+                    ),
+                  ]),
+                  loading()
+                ],
               ),
-            );
-          }
+            ),
+          );
         });
   }
 
@@ -246,17 +211,25 @@ class _ProfileState extends State<Profile> {
     return false;
   }
 
-  void validateAndSubmit(String userUid) async {
+  void validateAndSubmit(String userUid, User user) async {
     setState(() {
       _errorMessage = "";
       isLoading = true;
     });
     if (validateAndSave()) {
       try {
-        Firestore.instance
-            .collection("users")
-            .document(userUid)
-            .updateData({"displayName": _name, "bio": _bio});
+        if (_name != user.name ||
+            _bio != user.bio ||
+            _listPrefKey.currentState.instruments != user.instruments ||
+            _listPrefKey.currentState.genres != user.genres)
+          Firestore.instance.collection("users").document(userUid).updateData({
+            "displayName": _name,
+            "bio": _bio,
+            "instrument": _listPrefKey.currentState.instruments.join(", "),
+            "genre": _listPrefKey.currentState.genres.join(", ")
+          });
+
+        await _imKey.currentState.startUpload();
         setState(() {
           isLoading = false;
         });

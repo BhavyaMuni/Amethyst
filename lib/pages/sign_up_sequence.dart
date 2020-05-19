@@ -147,7 +147,7 @@ class _GenrePageState extends State<GenrePage> {
 
   void saveGenre(List<String> genres) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList("genres", genres);
+    prefs.setString("genres", genres.join(", "));
   }
 }
 
@@ -184,7 +184,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
     'Samples',
   ];
 
-  List<String> selectedIntrus = List();
+  List<String> selectedInstruments = List();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -210,7 +210,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
             ),
             Center(
               child: Container(
-                child: Text(selectedIntrus.join(", "),
+                child: Text(selectedInstruments.join(", "),
                     textAlign: TextAlign.center,
                     style: TextStyles()
                         .regularTextStyle()
@@ -224,17 +224,13 @@ class _InstrumentPageState extends State<InstrumentPage> {
                     children: List<Widget>.generate(instrumentList.length,
                         (int index) {
                       return ChoiceChip(
-                        labelPadding: EdgeInsets.symmetric(
-                            horizontal: 0.0, vertical: 0.0),
                         labelStyle: TextStyles()
                             .regularTextStyle()
                             .copyWith(fontSize: 14, color: Colors.white),
-                        backgroundColor: Color(0x00121212),
-                        selectedColor: Color(0x00000000),
                         label: Container(
                             height: 30,
                             decoration: BoxDecoration(
-                                gradient: selectedIntrus
+                                gradient: selectedInstruments
                                         .contains(instrumentList[index])
                                     ? TextStyles().baseGrad()
                                     : null,
@@ -247,15 +243,15 @@ class _InstrumentPageState extends State<InstrumentPage> {
                               ),
                             )),
                         selected:
-                            selectedIntrus.contains(instrumentList[index]),
+                            selectedInstruments.contains(instrumentList[index]),
                         onSelected: (bool selected) {
                           setState(() {
-                            if (!selectedIntrus
+                            if (!selectedInstruments
                                     .contains(instrumentList[index]) &&
-                                selectedIntrus.length < 3) {
-                              selectedIntrus.add(instrumentList[index]);
+                                selectedInstruments.length < 3) {
+                              selectedInstruments.add(instrumentList[index]);
                             } else {
-                              selectedIntrus.remove(instrumentList[index]);
+                              selectedInstruments.remove(instrumentList[index]);
                             }
                           });
                         },
@@ -274,7 +270,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
           size: 40,
         ),
         onPressed: () {
-          savenstrument(selectedIntrus.join(", "));
+          saveInstrument(selectedInstruments);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => SignUpFinalPage()));
         },
@@ -283,13 +279,11 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
-  void savenstrument(String instru) async {
+  void saveInstrument(List<String> instruments) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("instrument", instru);
+    prefs.setString("instrument", instruments.join(", "));
   }
 }
-
-
 
 class SignUpFinalPage extends StatefulWidget {
   SignUpFinalPage({Key key}) : super(key: key);
