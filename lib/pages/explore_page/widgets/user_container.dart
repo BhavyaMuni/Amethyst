@@ -63,11 +63,10 @@ class UserContainer extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    name,
-                    style:
-                        TextStyles().headerTextStyle().copyWith(fontSize: 28),
-                  ),
+                  child: Text(name,
+                      style: TextStyles()
+                          .headerTextStyle()
+                          .copyWith(fontSize: 28, fontWeight: FontWeight.w600)),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -83,9 +82,10 @@ class UserContainer extends StatelessWidget {
                         padding: EdgeInsets.only(left: 10),
                         child: Text(
                           "Mumbai, India",
-                          style: TextStyles()
-                              .subheaderTextStyle()
-                              .copyWith(color: Colors.white60, fontSize: 18),
+                          style: TextStyles().subheaderTextStyle().copyWith(
+                              color: Colors.white60,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w200),
                         ),
                       ),
                     ],

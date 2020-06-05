@@ -24,16 +24,16 @@ class DatabaseService {
 
   List<String> getSortedUserList(User user, List<User> users) {
     Map<String, int> userSameDict = {};
-    List combineListUser;
-    String currUid;
-    try {
-      combineListUser = user.instruments + user.genres;
-      currUid = user.uid;
-    } catch (e) {
-      combineListUser = [];
-      currUid = '';
-    }
-    // List combineListUser = user.instruments + user.genres;
+    // List combineListUser;
+    String currUid = user.uid;
+    // try {
+    //   combineListUser = user.instruments + user.genres;
+    //   currUid = user.uid;
+    // } catch (e) {
+    //   combineListUser = [];
+    //   currUid = '';
+    // }
+    List combineListUser = user.instruments + user.genres;
     for (var i in users) {
       if (i.uid == currUid) continue;
       String userUid = i.uid;

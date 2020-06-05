@@ -132,8 +132,9 @@ class ListGenresAndInstrumentsState extends State<ListGenresAndInstruments> {
             child: Column(
               children: <Widget>[
                 Text(titleHead,
-                    style:
-                        TextStyles().headerTextStyle().copyWith(fontSize: 18)),
+                    style: TextStyles()
+                        .headerTextStyle()
+                        .copyWith(fontSize: 18, fontWeight: FontWeight.w700)),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: listOut(list),
@@ -197,9 +198,10 @@ class ListGenresAndInstrumentsState extends State<ListGenresAndInstruments> {
               child: Container(
                   child: Text(list[index],
                       textAlign: TextAlign.center,
-                      style: TextStyles()
-                          .regularTextStyle()
-                          .copyWith(color: Colors.white, fontSize: 14))),
+                      style: TextStyles().regularTextStyle().copyWith(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300))),
             );
           },
         ),

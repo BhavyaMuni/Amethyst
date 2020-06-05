@@ -218,16 +218,16 @@ class _ProfileState extends State<Profile> {
     });
     if (validateAndSave()) {
       try {
-        if (_name != user.name ||
-            _bio != user.bio ||
-            _listPrefKey.currentState.instruments != user.instruments ||
-            _listPrefKey.currentState.genres != user.genres)
-          Firestore.instance.collection("users").document(userUid).updateData({
-            "displayName": _name,
-            "bio": _bio,
-            "instrument": _listPrefKey.currentState.instruments.join(", "),
-            "genre": _listPrefKey.currentState.genres.join(", ")
-          });
+        // if (_name != user.name ||
+        //     _bio != user.bio ||
+        //     _listPrefKey.currentState.instruments != user.instruments ||
+        //     _listPrefKey.currentState.genres != user.genres)
+        Firestore.instance.collection("users").document(userUid).updateData({
+          "displayName": _name,
+          "bio": _bio,
+          "instrument": _listPrefKey.currentState.instruments.join(", "),
+          "genre": _listPrefKey.currentState.genres.join(", ")
+        });
 
         await _imKey.currentState.startUpload();
         setState(() {

@@ -200,7 +200,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
                   "Select upto 3",
                   style: TextStyles()
                       .headerTextStyle()
-                      .copyWith(fontWeight: FontWeight.w400, fontSize: 24),
+                      .copyWith(fontWeight: FontWeight.w200, fontSize: 24),
                 ),
                 Text(
                   "INSTRUMENTS",
@@ -224,9 +224,11 @@ class _InstrumentPageState extends State<InstrumentPage> {
                     children: List<Widget>.generate(instrumentList.length,
                         (int index) {
                       return ChoiceChip(
-                        labelStyle: TextStyles()
-                            .regularTextStyle()
-                            .copyWith(fontSize: 14, color: Colors.white),
+                        backgroundColor: Colors.transparent,
+                        labelStyle: TextStyles().regularTextStyle().copyWith(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300),
                         label: Container(
                             height: 30,
                             decoration: BoxDecoration(

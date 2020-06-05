@@ -1,6 +1,5 @@
 import 'package:amethyst_app/pages/log_in.dart';
 import 'package:amethyst_app/pages/sign_up_sequence.dart';
-import 'package:amethyst_app/services/auth.dart';
 import 'package:amethyst_app/styles.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';

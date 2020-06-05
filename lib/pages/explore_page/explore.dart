@@ -1,5 +1,6 @@
 import 'package:amethyst_app/pages/explore_page/widgets/explore_list_users.dart';
 import 'package:amethyst_app/services/database.dart';
+import 'package:amethyst_app/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

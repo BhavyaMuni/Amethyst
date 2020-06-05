@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextStyles {
-  final baseTextStyle = const TextStyle(fontFamily: 'AvenirLTStd');
+  final baseTextStyle = const TextStyle(fontFamily: 'Nunito');
 
   LinearGradient baseGrad() {
     return LinearGradient(
