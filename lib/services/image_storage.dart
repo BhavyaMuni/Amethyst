@@ -102,7 +102,7 @@ class ImageSelectState extends State<ImageSelect> {
             radius: 80,
             backgroundImage: _imageFile != null
                 ? FileImage(_imageFile)
-                : widget.imUrl != null || widget.imUrl != ''
+                : widget.imUrl != null || widget.imUrl.isNotEmpty
                     ? NetworkImage(widget.imUrl)
                     : null,
           ),

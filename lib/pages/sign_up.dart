@@ -86,7 +86,10 @@ class _RegisterFormState extends State<RegisterForm> {
               shrinkWrap: true,
               children: <Widget>[
                 Center(
-                  child: ImageSelect(key: _imKey),
+                  child: ImageSelect(
+                    key: _imKey,
+                    imUrl: "",
+                  ),
                 ),
                 Container(
                   height: 30,
@@ -354,7 +357,7 @@ class _RegisterFormState extends State<RegisterForm> {
         print('Error: $e');
         setState(() {
           isLoading = false;
-          _errorMessage = e.message;
+          _errorMessage = e;
           _formKey.currentState.reset();
         });
       }

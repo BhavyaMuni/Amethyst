@@ -160,9 +160,10 @@ class ListGenresAndInstrumentsState extends State<ListGenresAndInstruments> {
                 )),
         child: Padding(
           padding: widget.editable
-              ? const EdgeInsets.symmetric(horizontal: 50.0, vertical: 30)
+              ? const EdgeInsets.symmetric(horizontal: 30.0, vertical: 30)
               : EdgeInsets.zero,
           child: Container(
+            width: 150,
             decoration: widget.editable ? editingDecor() : null,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
@@ -187,7 +188,7 @@ class ListGenresAndInstrumentsState extends State<ListGenresAndInstruments> {
 
   Widget listOut(List<String> list) {
     return Container(
-      height: 70,
+      height: 80,
       child: Center(
         child: ListView.builder(
           physics: NeverScrollableScrollPhysics(),
